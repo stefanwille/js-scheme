@@ -1,11 +1,10 @@
 'use strict';
 
-var expect = require('chai').expect;
+var assert = require('assert');
 
 function Symbol(name) {
   this.name = name;
 }
-
 
 function Token(token) {
   this.token = token;
@@ -24,81 +23,83 @@ describe('Lexer', function() {
   describe('#token()', function() {
     it('returns the current token', function() {
       var lexer = new Lexer('1');
-      expect(lexer.token()).to.equal(1);
+      assert.strictEqual(lexer.token(), 1);
     })
 
     it('can be called many times on the current token', function() {
       var lexer = new Lexer('1');
-      expect(lexer.token()).to.equal(1);
-      expect(lexer.token()).to.equal(1);
-      expect(lexer.token()).to.equal(1);
+      assert.strictEqual(lexer.token(), 1);
+      assert.strictEqual(lexer.token(), 1);
+      assert.strictEqual(lexer.token(), 1);
     })
   })
 
   describe('#next()', function() {
     it('returns true if there are more tokens to read', function() {
       var lexer = new Lexer('1');
-      expect(lexer.next()).to.be.true;
+      assert.equal(lexer.next(), true);
     })
 
     it('returns false if end of file', function() {
       var lexer = new Lexer('');
-      expect(lexer.next()).to.be.false;
+      assert.equal(lexer.next(), false);
     })
 
     it('advances the lexer to the next token', function() {
       var lexer = new Lexer('1 2 3');
-      expect(lexer.token()).to.equal(1);
-      expect(lexer.next()).to.be.true;
-      expect(lexer.token()).to.equal(2);
-      expect(lexer.next()).to.be.true;
-      expect(lexer.token()).to.equal(3);
-      expect(lexer.next()).to.be.false;
+      assert.strictEqual(lexer.token(), 1);
+      assert.equal(lexer.next(), true);
+      assert.strictEqual(lexer.token(), 2);
+      assert.equal(lexer.next(), true);
+      assert.strictEqual(lexer.token(), 3);
+      assert.equal(lexer.next(), false);
     })
 
     it('accepts numbers', function() {
       var lexer = new Lexer('12345');
-      expect(lexer.token()).to.equal(12345);
+      assert.equal(lexer.token(), 12345);
     })
 
     it('accepts strings', function() {
       var lexer = new Lexer(' "Hello" ');
-      expect(lexer.token()).to.equal('Hello');
+      assert.equal(lexer.token(), 'Hello');
     })
 
     it('accepts symbols', function() {
       var lexer = new Lexer('define + < ready?');
-      expect(lexer.token()).to.equal(new Symbol('define'));
+      assert.equal(lexer.token(), new Symbol('define'));
       lexer.next();
-      expect(lexer.token()).to.equal(new Symbol('+'));
+      assert.equal(lexer.token(), new Symbol('+'));
       lexer.next();
-      expect(lexer.token()).to.equal(new Symbol('<'));
+      assert.equal(lexer.token(), new Symbol('<'));
       lexer.next();
-      expect(lexer.token()).to.equal(new Symbol('ready?'));
+      assert.equal(lexer.token(), new Symbol('ready?'));
+      lexer.next();
     })
 
     it('accepts booleans', function() {
       var lexer = new Lexer('#t #f');
-      expect(lexer.token()).to.be.true;
+      assert.equal(lexer.token(), true);
       lexer.next();
-      expect(lexer.token()).to.be.false;
+      assert.equal(lexer.token(), false);
     })
 
     it('accepts parentheses', function() {
       var lexer = new Lexer('()');
-      expect(lexer.token()).to.equal(LEFT_PARENTHESIS);
+      assert.equal(lexer.token(), LEFT_PARENTHESIS);
       lexer.next();
-      expect(lexer.token()).to.equal(RIGHT_PARENTHESIS);
+      assert.equal(lexer.token(), RIGHT_PARENTHESIS);
     })
 
     it('accepts quoted parentheses', function() {
       var lexer = new Lexer("'()");
-      expect(lexer.token()).to.equal("'");
+      assert.equal(lexer.token(), "'");
       lexer.next();
-      expect(lexer.token()).to.equal(LEFT_PARENTHESIS);
+      assert.equal(lexer.token(), LEFT_PARENTHESIS);
       lexer.next();
-      expect(lexer.token()).to.equal(RIGHT_PARENTHESIS);
+      assert.equal(lexer.token(), RIGHT_PARENTHESIS);
     })
   })
 })
+
 
