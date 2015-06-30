@@ -47,7 +47,7 @@ describe('Lexer', function() {
       assert.equal(lexer.next(), false);
     })
 
-    it('advances to the next token', function() {
+    it('advances the lexer to the next token', function() {
       var lexer = new Lexer('1 2 3');
       assert.equal(lexer.token(), 'NUMBER');
       assert.equal(lexer.next(), true);
@@ -68,7 +68,7 @@ describe('Lexer', function() {
     })
 
     it('accepts symbols', function() {
-      var lexer = new Lexer('define + * ready?');
+      var lexer = new Lexer('define + < ready?');
       assert.equal(lexer.token(), 'SYMBOL');
       assert.equal(lexer.value(), 'define');
       lexer.next();
@@ -76,11 +76,20 @@ describe('Lexer', function() {
       assert.equal(lexer.value(), '+');
       lexer.next();
       assert.equal(lexer.token(), 'SYMBOL');
-      assert.equal(lexer.value(), '-');
+      assert.equal(lexer.value(), '<');
       lexer.next();
       assert.equal(lexer.token(), 'SYMBOL');
       assert.equal(lexer.value(), 'ready?');
       lexer.next();
+    })
+
+    it('accepts booleans', function() {
+      var lexer = new Lexer('#t #f');
+      assert.equal(lexer.token(), 'BOOLEAN');
+      assert.equal(lexer.value(), true);
+      lexer.next();
+      assert.equal(lexer.token(), 'BOOLEAN');
+      assert.equal(lexer.value(), false);
     })
 
     it('accepts parentheses', function() {
@@ -88,15 +97,6 @@ describe('Lexer', function() {
       assert.equal(lexer.token(), "(");
       lexer.next();
       assert.equal(lexer.token(), ")");
-    })
-
-    it('accepts boolean', function() {
-      var lexer = new Lexer('#t #f');
-      assert.equal(lexer.token(), 'BOOLEAN');
-      assert.equal(lexer.value(), true);
-      lexer.next();
-      assert.equal(lexer.token(), 'BOOLEAN');
-      assert.equal(lexer.value(), false);
     })
   })
 })
