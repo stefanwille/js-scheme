@@ -90,6 +90,15 @@ describe('Lexer', function() {
       lexer.next();
       assert.equal(lexer.token(), RIGHT_PARENTHESIS);
     })
+
+    it('accepts quoted parentheses', function() {
+      var lexer = new Lexer("'()");
+      assert.equal(lexer.token(), "'");
+      lexer.next();
+      assert.equal(lexer.token(), LEFT_PARENTHESIS);
+      lexer.next();
+      assert.equal(lexer.token(), RIGHT_PARENTHESIS);
+    })
   })
 })
 
